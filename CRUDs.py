@@ -99,17 +99,17 @@ def save_usuario(usuario: Usuario):
 
 # Read
 @app.get('/usuarios/{id}')
-def get_usuario(usuario_id: str):
+def get_usuario(id: str):
     for usuario in usuarios:
-        if usuario["id"] == usuario_id:
+        if usuario["id"] == id:
             return usuario
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
 # Update
 @app.put('/usuarios/{id}')
-def update_usuario(usuario_id: str, updatedUsuario: Usuario):
+def update_usuario(id: str, updatedUsuario: Usuario):
     for index, usuario in enumerate(usuarios):
-        if usuario["id"] == usuario_id:
+        if usuario["id"] == id:
             usuarios[index]["nombre"]= updatedUsuario.dict()["nombre"]
             usuarios[index]["email"]= updatedUsuario.dict()["email"]
             return {"message": "El usuario se ha actualizado satisfactoriamente"}
@@ -117,9 +117,9 @@ def update_usuario(usuario_id: str, updatedUsuario: Usuario):
 
 # Delete
 @app.delete('/usuarios/{id}')
-def delete_usuario(usuario_id: str):
+def delete_usuario(id: str):
     for index, usuario in enumerate(usuarios):
-        if usuario["id"] == usuario_id:
+        if usuario["id"] == id:
             usuarios.pop(index)
             return {"message": "El usuario ha sido eliminado de manera satisfactoria"}
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -137,17 +137,17 @@ def save_docente(docente: Docente):
 
 # Read
 @app.get('/docentes/{id}')
-def get_docente(docente_id: str):
+def get_docente(id: str):
     for docente in docentes:
-        if docente["id"] == docente_id:
+        if docente["id"] == id:
             return docente
     raise HTTPException(status_code=404, detail="Docente no encontrado")
 
 # Update
 @app.put('/docentes/{id}')
-def update_docente(docente_id: str, updatedDocente: Docente):
+def update_docente(id: str, updatedDocente: Docente):
     for index, docente in enumerate(docentes):
-        if docente["id"] == docente_id:
+        if docente["id"] == id:
             docentes[index]["nombre"] = updatedDocente.dict()["nombre"]
             docentes[index]["email"] = updatedDocente.dict()["email"]
             docentes[index]["especialidad"] = updatedDocente.dict()["especialidad"]
@@ -156,9 +156,9 @@ def update_docente(docente_id: str, updatedDocente: Docente):
 
 # Delete
 @app.delete('/docentes/{id}')
-def delete_docente(docente_id: str):
+def delete_docente(id: str):
     for index, docente in enumerate(docentes):
-        if docente["id"] == docente_id:
+        if docente["id"] == id:
             docentes.pop(index)
             return {"message": "El docente ha sido eliminado de manera satisfactoria"}
     raise HTTPException(status_code=404, detail="Docente no encontrado")
