@@ -9,6 +9,37 @@ from uuid import uuid4 as uuid
 
 app = FastAPI()
 
+cursos = []
+usuarios = []
+docentes = []
+
+# Post model
+class Curso(BaseModel):
+    id_curso: str
+    curso: str
+    descripcion: Text
+    costo: int
+    id_docente: str
+    docente: str
+    sesiones: int
+    duracion_sesion: int
+    calificacion: float
+    fecha_creacion: datetime =  datetime.now()
+
+class Usuario(BaseModel):
+    id: str
+    nomrbre: str
+    email: str
+    carrito: list
+    fecha_creacion: datetime =  datetime.now()
+
+class Docente(BaseModel):
+    id: str
+    nombre: str
+    email: str
+    especialidad: str
+    fecha_creacion: datetime =  datetime.now()
+
 @app.get('/')
 def read_root():
     return {"Welcome": "Bienvenidos a Dream Team Education"}
@@ -44,7 +75,8 @@ def update_curso(id_curso: str, updatedCurso: Curso):
             cursos[index]["id_docente"]= updatedCurso.dict()["id_docente"]
             cursos[index]["docente"]= updatedCurso.dict()["docente"]
             cursos[index]["sesiones"]= updatedCurso.dict()["sesiones"]
-            cursos[index]["duracion_sesion"]= updatedCurso.dict()["duracion_sesion"]
+            cursos[index]["duracion_sesion"]    = updatedCurso.dict()["duracion_sesion"]
+            cursos[index]["calificacion"]= updatedCurso.dict()["calificacion"]
             return {"message": "El curso ha sido actualizado satisfactoriamente"}
     raise HTTPException(status_code=404, detail="Curso no encontrado")
 
@@ -65,6 +97,7 @@ def get_usuarios():
 @app.post('/usuarios')
 def save_usuario(usuario: Usuario):
     usuario.id = str(uuid())
+    usuario.carrito = []
     usuarios.append(usuario.dict())
     return usuarios[-1]
 
@@ -134,3 +167,36 @@ def delete_docente(id: str):
             return {"message": "El docente ha sido eliminado de manera satisfactoria"}
     raise HTTPException(status_code=404, detail="Docente no encontrado")
 
+#Filtro de cursos
+@app.get('/{calificacion}')
+def filtro_cursos(calificacion: float):
+    lf = []
+    for curso in cursos:
+        if curso["calificacion"] >= calificacion:
+            lf.append(curso)
+    return lf
+
+#Carrito
+@app.get('/usuarios/{id}/carrito')
+def carrito(id: str, id_curso: str):
+    for usuario in usuarios:
+        if usuario["id"] == id:
+            usuario["carrito"].append(id_curso)
+            return usuario["carrito"]
+    raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+#Factura
+@app.get('/usuario/{id}/factura')
+def factura(id: str):
+    total=0
+    for usuario in usuarios:
+        if usuario["id"] == id:
+            for idcurso in usuario["carrito"]:
+                for curso in cursos:
+                    if curso["id_curso"] == idcurso:
+                        total=curso["costo"]+total
+            usuario["carrito"].append(total)
+            return usuario["carrito"]
+    raise HTTPException(status_code=404, detail="Usuario no encontrado")    
+
+#Porcentaje profesores
