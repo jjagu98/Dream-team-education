@@ -7,4 +7,3 @@ from v1.utils.database import db
 def create_tables():
     with db:
         db.create_tables([Usuario,Docente,Curso])
-        
