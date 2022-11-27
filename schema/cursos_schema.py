@@ -9,6 +9,9 @@ from uuid import uuid4 as uuid
 
 
 class Curso(BaseModel):
+    """
+    Esta clase crea la estructura para instanciar objetos de tipo Curso
+    """
     id_curso: str
     curso: str
     descripcion: Text

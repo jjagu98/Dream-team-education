@@ -8,6 +8,9 @@ from uuid import uuid4 as uuid
 
 
 class Usuario(BaseModel):
+    """
+    Esta clase crea la estructura para instanciar objetos de tipo Usuario
+    """
     id: str
     nombre: str
     fecha_creacion: datetime =  datetime.now()

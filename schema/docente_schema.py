@@ -7,6 +7,9 @@ from datetime import datetime
 from uuid import uuid4 as uuid
 
 class Docente(BaseModel):
+    """
+    Esta clase crea la estructura para instanciar objetos de tipo Docente
+    """
     id: str
     nombre: str
     email: str

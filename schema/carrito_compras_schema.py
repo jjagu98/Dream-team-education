@@ -8,6 +8,9 @@ from uuid import uuid4 as uuid
 
 
 class Carrito_compra(BaseModel):
+    """
+    Esta clase crea la estructura para instanciar objetos de tipo Carrito_compra
+    """
     id_compra:int
     id_usuario:str
     id_curso:int
