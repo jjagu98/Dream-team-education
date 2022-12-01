@@ -2,7 +2,7 @@ from re import S
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import Text
+from typing import Text,Union 
 from datetime import datetime
 from uuid import uuid4 as uuid
 from model.conexion_usuario import Conexionusuario
@@ -188,9 +188,9 @@ def get_cursos() -> list:
     return conn_curso.read_all()
 
 @app.get('/cursos/{id}')
-def get_curso(id: str) -> tuple:
+async def get_curso(id: Union[str, None] = None, curso: Union[str, None] = None,docente: Union[str, None] = None,calificacion: Union[float, None] = None) -> tuple:
     """
-    Muestra la información del curso con el id especificado.
+    Muestra la información del curso con el id especificado.    
 
     Args:
         id (str): id del curso.
@@ -198,7 +198,14 @@ def get_curso(id: str) -> tuple:
     Returns:
         tuple: información del curso.
     """
-    return conn_curso.get_curso(id)
+    if curso:
+        return {"id": id, "curso": curso},conn_curso.get_curso(id)
+    elif docente:
+        return {"id": id, "docente": docente},conn_curso.get_curso(id) 
+    elif calificacion:
+        return {"id": id, "calificacion": calificacion},conn_curso.get_curso(id)      
+    return {"id": id},conn_curso.get_curso(id)
+    
     
 @app.delete('/cursos/{id}')
 def delete_curso(id: str) -> dict:
@@ -254,7 +261,11 @@ def get_total(id: str) -> Conexioncarrito:
         Conexioncarrito: Valor total a pagar.
     """
     total=conn_carrito.factura_total(id)
-    return {"message":f'El total a pagar es {total[0]}'}
+    if total==None:
+        raise HTTPException(status_code=404, detail="Apreciado usuario {total[0]}, usted todavía no ha seleccionado ningún curso ")
+    else:
+        return {"message":f'Apreciado usuario {total[0]} el total a pagar es {total[1]}'}
+ 
 
 @app.get('/carritocompras/docente/{id}')
 def get_total_docente(id: str) -> Conexioncarrito:

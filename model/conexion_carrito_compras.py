@@ -23,6 +23,7 @@ class Conexioncarrito():
         """
         Este método inserta los valores a la tabla carrito_compras
         """
+    
         with self.conn.cursor() as cur:
             cur.execute("""
             INSERT INTO "carrito_compras"(id_compra,id_usuario,id_curso) VALUES(%(id_compra)s,%(id_usuario)s,%(id_curso)s)
@@ -35,10 +36,11 @@ class Conexioncarrito():
         """        
         with self.conn.cursor() as cur:
             cur.execute("""
-            SELECT sum(t2.costo) FROM "carrito_compras" t1 
+            SELECT t3.nombre,sum(t2.costo) FROM "carrito_compras" t1 
             LEFT JOIN "cursos" t2 on t1.id_curso=cast(t2.id as int)
             LEFT JOIN "usuarios" t3 on t1.id_usuario=t3.id
             WHERE t3.id=%s
+            GROUP BY t3.nombre
             """,(id,))
             data=cur.fetchone()
             return data
