@@ -190,8 +190,7 @@ def get_cursos() -> list:
 @app.get('/cursos/{id}')
 async def get_curso(id: Union[str, None] = None, curso: Union[str, None] = None,docente: Union[str, None] = None,calificacion: Union[float, None] = None) -> tuple:
     """
-    Muestra la información del curso con el id especificado.    
-
+    Muestra la información del curso con el id especificado. El curso, docente y calificacion son parámetros extras.
     Args:
         id (str): id del curso.
 
