@@ -198,12 +198,12 @@ async def get_curso(id: Union[str, None] = None, curso: Union[str, None] = None,
         tuple: información del curso.
     """
     if curso:
-        return {"id": id, "curso": curso},conn_curso.get_curso(id)
+        conn_curso.get_curso(id,curso)
     elif docente:
-        return {"id": id, "docente": docente},conn_curso.get_curso(id) 
+        conn_curso.get_curso(id,docente) 
     elif calificacion:
-        return {"id": id, "calificacion": calificacion},conn_curso.get_curso(id)      
-    return {"id": id},conn_curso.get_curso(id)
+        conn_curso.get_curso(id,calificacion)      
+    return conn_curso.get_curso(id)
     
     
 @app.delete('/cursos/{id}')
@@ -279,6 +279,6 @@ def get_total_docente(id: str) -> Conexioncarrito:
     """
     total=conn_carrito.pago_docente(id)
     if total==None:
-        raise HTTPException(status_code=404, detail="El docente todavia no tiene pago disponible")
+        raise HTTPException(status_code=404, detail="El docente {total[0]} todavia no tiene pago disponible")
     else:
         return {"message":f'El total a pagar al docente {total[0]} es {total[1]}'}

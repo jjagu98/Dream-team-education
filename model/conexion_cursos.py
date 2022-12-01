@@ -42,14 +42,14 @@ class Conexioncursos():
             """,data)
         self.conn.commit()
 
-    def get_curso(self,id) -> tuple:
+    def get_curso(self,id=None,curso=None,docente=None,calificacion=None) -> tuple:
         """
         Este método busca el curso por el id específico.
         """
         with self.conn.cursor() as cur:
             cur.execute("""
-            SELECT * FROM "cursos" where id = %s
-            """,(id,)) 
+            SELECT * FROM "cursos" where id = %s or curso=%s or docente=%s or calificacion=%s
+            """,(id,curso,docente,calificacion,)) 
             data = cur.fetchone()
             return data 
     
